@@ -1,0 +1,12 @@
+.DS_Store
+node_modules/
+.cache/
+*.log
+.generated-pages.json.*.tmp
+dist/
+.wrangler/
+Del-Rio-Capital-Website.zip
+.env
+.env.*
+.dev.vars
+.dev.vars.*

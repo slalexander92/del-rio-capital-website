@@ -1,0 +1,14 @@
+{
+  "name": "del-rio-capital-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-site.mjs",
+    "dev": "node scripts/dev-server.mjs",
+    "start": "npm run dev",
+    "check": "node scripts/check-site.mjs",
+    "preview:build": "node scripts/prepare-cloudflare-preview.mjs",
+    "preview:deploy": "npm run check && npm run preview:build && npx --yes wrangler@4.144.0 pages deploy dist --project-name del-rio-capital-preview --branch main"
+  }
+}
