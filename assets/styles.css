@@ -6,14 +6,6 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Instrument Serif";
-  src: url("/assets/fonts/instrument-serif-italic-latin.woff2") format("woff2");
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-}
-
 :root {
   --forest: #142e27;
   --forest-deep: #10251f;
@@ -25,7 +17,6 @@
   --muted: #55645a;
   --line: #d1d7cc;
   --font: "Manrope", "Helvetica Neue", sans-serif;
-  --serif: "Instrument Serif", Georgia, serif;
   color-scheme: light;
 }
 
@@ -120,11 +111,9 @@ a:active {
   transform: translateY(0);
 }
 
-.serif-accent {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-style: italic;
-  letter-spacing: -0.015em;
+/* Upright title accents share the heading face; weight and color supply contrast. */
+.title-accent {
+  font-weight: 500;
 }
 
 .eyebrow {
@@ -142,10 +131,6 @@ a:active {
 .section-title {
   font-size: clamp(2.125rem, 3.4vw, 3.125rem);
   letter-spacing: -0.045em;
-}
-
-.section-title .serif-accent {
-  font-size: 1.12em;
 }
 
 .section-heading {
@@ -338,11 +323,6 @@ a:active {
   padding-block: clamp(3rem, 5.5vw, 5rem) 3.5rem;
 }
 
-.hero .eyebrow {
-  color: var(--moss);
-  margin-bottom: 1.5rem;
-}
-
 .hero-title {
   max-width: 48rem;
   font-size: clamp(2.5rem, 5.8vw, 5.25rem);
@@ -350,11 +330,9 @@ a:active {
   letter-spacing: -0.055em;
 }
 
-.hero-title .serif-accent {
+.hero-title .title-accent {
   display: block;
   color: #d9dfc9;
-  font-size: 1.15em;
-  line-height: 1.05;
   margin-top: 0.25rem;
 }
 
@@ -502,6 +480,7 @@ a:active {
 }
 
 .property-image {
+  display: block;
   position: relative;
   overflow: hidden;
   aspect-ratio: 1.7;
@@ -680,7 +659,7 @@ dd {
   letter-spacing: -0.045em;
 }
 
-.contact-cta h2 .serif-accent {
+.contact-cta h2 .title-accent {
   color: var(--moss);
 }
 
@@ -718,8 +697,7 @@ dd {
   letter-spacing: -0.045em;
 }
 
-.display-title .serif-accent {
-  font-size: 1.1em;
+.display-title .title-accent {
   color: var(--moss);
 }
 
@@ -776,17 +754,39 @@ dd {
   background: var(--surface);
 }
 
-.about-approach + .partners-section .partners-grid {
-  max-width: 60rem;
-  gap: 2.5rem;
+/* Full biographies sit beside portraits, keeping long copy at a readable width. */
+.partner-profiles {
+  display: grid;
+  gap: 3.5rem;
 }
 
-.about-approach + .partners-section .partner-photo {
-  aspect-ratio: 0.96;
+.partner-profile {
+  display: grid;
+  grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.35fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
 }
 
-.about-approach + .partners-section .partner-info h3 {
+.partner-profile + .partner-profile {
+  border-top: 1px solid var(--line);
+  padding-top: 3.5rem;
+}
+
+.partner-profile-content {
+  max-width: 46rem;
+}
+
+.partner-profile .partner-info {
+  padding-top: 0;
+}
+
+.partner-profile .partner-info h3 {
   font-size: 1.5rem;
+}
+
+.partner-bio {
+  margin-block: 1.25rem;
+  color: var(--muted);
 }
 
 .about-portfolio-inner,
@@ -1229,10 +1229,6 @@ dd {
     font-size: clamp(2.25rem, 8.8vw, 4rem);
   }
 
-  .hero-title .serif-accent {
-    font-size: 1.12em;
-  }
-
   .hero-caption {
     justify-content: start;
   }
@@ -1242,6 +1238,7 @@ dd {
   .properties-grid,
   .contact-cta-inner,
   .approach-layout,
+  .partner-profile,
   .property-detail-layout,
   .contact-layout {
     grid-template-columns: minmax(0, 1fr);
@@ -1301,8 +1298,8 @@ dd {
     gap: 0 1.5rem;
   }
 
-  .about-approach + .partners-section .partners-grid {
-    gap: 1.5rem;
+  .partner-profile .partner-photo {
+    max-width: 28rem;
   }
 
   .about-portfolio-inner,

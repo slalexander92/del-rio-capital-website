@@ -7,7 +7,7 @@ export function renderAbout(site) {
     <section class="page-hero">
       <div class="container">
         <p class="eyebrow">About Del Rio Capital</p>
-        <h1 class="display-title">Built on conviction.<br>Driven by <span class="serif-accent">execution.</span></h1>
+        <h1 class="display-title">Built on conviction.<br>Driven by <span class="title-accent">execution.</span></h1>
         <p class="page-intro">${escapeHtml(site.description)}</p>
       </div>
     </section>
@@ -16,7 +16,7 @@ export function renderAbout(site) {
       <div class="container approach-layout">
         <div class="approach-heading">
           <p class="eyebrow">Our approach</p>
-          <h2 id="approach-heading" class="section-title">See the potential.<br><span class="serif-accent">Do the work.</span></h2>
+          <h2 id="approach-heading" class="section-title">Identify potential.<br><span class="title-accent">Deliver results.</span></h2>
         </div>
         <div class="approach-narrative">
           <p class="approach-introduction">Del Rio Capital pursues industrial properties where focused capital investment and hands-on execution can unlock value. Our approach brings acquisition, renovation, and leasing together around a clear business plan.</p>
@@ -37,12 +37,12 @@ export function renderAbout(site) {
     <section id="partners" class="section partners-section" aria-labelledby="partners-heading">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">Our partners</p>
-          <h2 id="partners-heading" class="section-title">A focused platform.<br><span class="serif-accent">A personal commitment.</span></h2>
-          <p class="section-copy">Meet the partners behind Del Rio Capital.</p>
+          <p class="eyebrow">Our team</p>
+          <h2 id="partners-heading" class="section-title">A focused platform.<br><span class="title-accent">A personal commitment.</span></h2>
+          <p class="section-copy">Meet the team behind Del Rio Capital.</p>
         </div>
-        <div class="partners-grid">
-          ${site.partners.map(renderPartnerCard).join("")}
+        <div class="partner-profiles">
+          ${site.partners.map(renderPartnerProfile).join("")}
         </div>
       </div>
     </section>
@@ -51,7 +51,7 @@ export function renderAbout(site) {
       <div class="container about-portfolio-inner">
         <div>
           <p class="eyebrow">The work behind the strategy</p>
-          <h2 id="about-portfolio-heading" class="section-title">Real assets.<br><span class="serif-accent">Tangible progress.</span></h2>
+          <h2 id="about-portfolio-heading" class="section-title">Real assets.<br><span class="title-accent">Tangible progress.</span></h2>
         </div>
         <a class="text-link" href="/portfolio/">View our portfolio</a>
       </div>
@@ -64,7 +64,7 @@ export function renderPortfolio(site) {
     <section class="page-hero">
       <div class="container">
         <p class="eyebrow">Our portfolio</p>
-        <h1 class="display-title">Our <span class="serif-accent">portfolio.</span></h1>
+        <h1 class="display-title">Our <span class="title-accent">portfolio.</span></h1>
         <p class="page-intro">Explore our industrial properties, acquisition details, and business plans across the Southwest U.S.</p>
       </div>
     </section>
@@ -72,7 +72,7 @@ export function renderPortfolio(site) {
     <section class="section portfolio-section" aria-labelledby="portfolio-heading">
       <div class="container">
         <div class="portfolio-heading">
-          <h2 id="portfolio-heading" class="eyebrow">Selected investments</h2>
+          <h2 id="portfolio-heading" class="eyebrow">Select investments</h2>
           <span class="portfolio-count">${escapeHtml(site.properties.length)} properties</span>
         </div>
         <div class="properties-grid">
@@ -129,7 +129,7 @@ export function renderProperty(property, site) {
         </div>
       </div>
       <div class="property-detail-image">
-        <img src="${escapeHtml(property.image)}" alt="${escapeHtml(property.address)}, ${escapeHtml(property.city)} industrial property" width="1350" height="900" fetchpriority="high">
+        <img src="${escapeHtml(property.image)}" alt="${escapeHtml(property.address)}, ${escapeHtml(property.city)} industrial property" width="${escapeHtml(property.imageWidth)}" height="${escapeHtml(property.imageHeight)}" fetchpriority="high">
       </div>
     </section>
 
@@ -184,7 +184,7 @@ export function renderProperty(property, site) {
       <div class="container property-next-inner">
         <div>
           <p class="eyebrow">Start a conversation</p>
-          <h2 id="property-next-heading" class="section-title">See an opportunity?<br><span class="serif-accent">Let’s connect.</span></h2>
+          <h2 id="property-next-heading" class="section-title">See an opportunity?<br><span class="title-accent">Let’s connect.</span></h2>
         </div>
         <a class="button button-primary" href="/contact/">Contact Del Rio Capital</a>
       </div>
@@ -205,7 +205,7 @@ export function renderContact(site) {
     <section class="page-hero contact-hero">
       <div class="container">
         <p class="eyebrow">Contact Del Rio Capital</p>
-        <h1 class="display-title">Contact<br><span class="serif-accent">Del Rio Capital.</span></h1>
+        <h1 class="display-title">Contact<br><span class="title-accent">Del Rio Capital.</span></h1>
         <p class="page-intro">Speak with our team about industrial acquisitions, investment opportunities, and capital partnerships.</p>
       </div>
     </section>
@@ -214,7 +214,7 @@ export function renderContact(site) {
       <div class="container contact-layout">
         <div class="contact-intro">
           <p class="eyebrow">Get in touch</p>
-          <h2 id="contact-heading" class="section-title">Direct access.<br><span class="serif-accent">Open conversation.</span></h2>
+          <h2 id="contact-heading" class="section-title">Direct access.<br><span class="title-accent">Open conversation.</span></h2>
           <p>Connect with Gaelan Kerr-Koppel to discuss industrial acquisitions, investment opportunities, or working with Del Rio Capital.</p>
         </div>
         <div class="contact-links">
@@ -248,9 +248,7 @@ export function renderContact(site) {
 export function renderPartnerCard(partner) {
   return `
     <article class="partner-card">
-      <div class="partner-photo" style="--portrait-scale: ${escapeHtml(partner.portrait?.scale ?? 1)}; --portrait-offset-y: ${escapeHtml(partner.portrait?.offsetY ?? 0)}%;">
-        <img src="${escapeHtml(partner.image)}" alt="${escapeHtml(partner.name)}, Partner at Del Rio Capital" width="720" height="800" loading="lazy" decoding="async">
-      </div>
+      ${renderPartnerPhoto(partner)}
       <div class="partner-info">
         <div>
           <h3>${escapeHtml(partner.name)}</h3>
@@ -265,10 +263,10 @@ export function renderPartnerCard(partner) {
 export function renderPropertyCard(property) {
   return `
     <article class="property-card">
-      <div class="property-image">
-        <img src="${escapeHtml(property.image)}" alt="${escapeHtml(property.address)}, ${escapeHtml(property.city)}, ${escapeHtml(property.state)} industrial property" width="1350" height="900" loading="lazy" decoding="async">
+      <a class="property-image" href="/portfolio/${escapeHtml(property.slug)}/" aria-label="View property details: ${escapeHtml(property.address)}, ${escapeHtml(property.city)}, ${escapeHtml(property.state)}">
+        <img src="${escapeHtml(property.image)}" alt="${escapeHtml(property.address)}, ${escapeHtml(property.city)}, ${escapeHtml(property.state)} industrial property" width="${escapeHtml(property.imageWidth)}" height="${escapeHtml(property.imageHeight)}" loading="lazy" decoding="async">
         <span class="property-type">${escapeHtml(property.type)}</span>
-      </div>
+      </a>
       <div class="property-card-body">
         <p class="property-location">${escapeHtml(property.city)}, ${escapeHtml(property.state)}</p>
         <h3 class="property-name"><a href="/portfolio/${escapeHtml(property.slug)}/">${escapeHtml(property.address)}</a></h3>
@@ -290,6 +288,29 @@ function renderContactRow(label, value, href) {
       <a href="${escapeHtml(href)}">${escapeHtml(value)}</a>
     </div>
   `;
+}
+
+// Full biographies belong on the About page; shared cards stay compact elsewhere.
+function renderPartnerProfile(partner) {
+  return `
+    <article class="partner-profile">
+      ${renderPartnerPhoto(partner)}
+      <div class="partner-profile-content">
+        <div class="partner-info">
+          <h3>${escapeHtml(partner.name)}</h3>
+          <p class="partner-role">${escapeHtml(partner.role)}</p>
+        </div>
+        <p class="partner-bio">${escapeHtml(partner.bio)}</p>
+        <a class="partner-social" href="${escapeHtml(partner.linkedin)}" aria-label="View ${escapeHtml(partner.name)}’s LinkedIn profile">View LinkedIn profile</a>
+      </div>
+    </article>
+  `;
+}
+
+function renderPartnerPhoto(partner) {
+  return `<div class="partner-photo" style="--portrait-scale: ${escapeHtml(partner.portrait?.scale ?? 1)}; --portrait-offset-y: ${escapeHtml(partner.portrait?.offsetY ?? 0)}%;">
+        <img src="${escapeHtml(partner.image)}" alt="${escapeHtml(partner.name)}, ${escapeHtml(partner.role)} at Del Rio Capital" width="720" height="800" loading="lazy" decoding="async">
+      </div>`;
 }
 
 function renderFact({ label, value }) {

@@ -103,7 +103,7 @@ function renderFooter() {
           <span class="footer-label">Explore</span>
           <a href="/about/">About Del Rio Capital</a>
           <a href="/portfolio/">Portfolio</a>
-          <a href="/about/#partners">Partners</a>
+          <a href="/about/#partners">Team</a>
         </div>
         <div class="footer-column footer-connect">
           <span class="footer-label">Connect</span>
