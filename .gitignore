@@ -10,3 +10,5 @@ Del-Rio-Capital-Website.zip
 .env.*
 .dev.vars
 .dev.vars.*
+
+audits/*
