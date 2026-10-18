@@ -1,6 +1,8 @@
 import { escapeHtml } from "./layout.mjs";
 import { renderPartnerCard, renderPropertyCard } from "./pages.mjs";
+import { responsiveImageSources } from "../utilities/responsive-image-sources.mjs";
 
+// Mobile cover crops need enough image pixels for the tall, text-driven hero.
 // The homepage connects the investment thesis to real assets and the people behind them.
 export function renderHome(site) {
   const area = site.properties.reduce(
@@ -14,7 +16,7 @@ export function renderHome(site) {
 
   return `
       <section class="hero" aria-labelledby="hero-title">
-        <img class="hero-image" src="/assets/images/tolleson.webp" width="1351" height="900" alt="Industrial building at 700 South 94th Avenue in Tolleson, Arizona" fetchpriority="high">
+        <img class="hero-image" src="/assets/images/tolleson.webp" srcset="${escapeHtml(responsiveImageSources("/assets/images/tolleson.webp", 1351))}" sizes="(max-width: 480px) 800px, (max-width: 768px) 150vw, 68vw" width="1351" height="900" alt="Industrial building at 700 South 94th Avenue in Tolleson, Arizona" fetchpriority="high">
         <div class="hero-shade" aria-hidden="true"></div>
         <div class="container hero-content">
           <h1 class="hero-title" id="hero-title">Industrial focus.<br><span class="title-accent">Exceptional potential.</span></h1>
@@ -53,7 +55,7 @@ export function renderHome(site) {
       <section class="section portfolio-section" aria-labelledby="portfolio-title">
         <div class="container">
           <div class="section-heading portfolio-heading"><div><p class="eyebrow">Our portfolio</p><h2 class="section-title" id="portfolio-title">Select<br><span class="title-accent">investments</span></h2></div><a class="text-link" href="/portfolio/">View all properties</a></div>
-          <div class="properties-grid">${site.properties.map((property, index) => renderPropertyCard(property, index)).join("")}</div>
+          <div class="properties-grid">${site.properties.map((property) => renderPropertyCard(property)).join("")}</div>
         </div>
       </section>
 

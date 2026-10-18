@@ -89,6 +89,11 @@ async function checkReferences(filePath, html) {
   const references = [
     ...html.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi),
   ].map((match) => match[1]);
+  references.push(
+    ...[...html.matchAll(/\b(?:srcset|imagesrcset)\s*=\s*["']([^"']+)["']/gi)]
+      .flatMap((match) => match[1].split(","))
+      .map((candidate) => candidate.trim().split(/\s+/)[0]),
+  );
 
   for (const reference of references) {
     let url;

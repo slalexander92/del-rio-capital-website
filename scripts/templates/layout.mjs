@@ -1,4 +1,5 @@
 import { siteContent } from "../../data/site-content.mjs";
+import { responsiveImageSources } from "../utilities/responsive-image-sources.mjs";
 
 // One shared document owns navigation, brand assets, metadata, and contact details.
 export function renderLayout({
@@ -48,7 +49,7 @@ export function renderLayout({
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
     <link rel="preload" href="/assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
-    ${path === "/" ? '<link rel="preload" href="/assets/images/tolleson.webp" as="image" fetchpriority="high">' : ""}
+    ${path === "/" ? `<link rel="preload" href="/assets/images/tolleson.webp" as="image" imagesrcset="${escapeHtml(responsiveImageSources("/assets/images/tolleson.webp", 1351))}" imagesizes="(max-width: 480px) 800px, (max-width: 768px) 150vw, 68vw" fetchpriority="high">` : ""}
     <link rel="stylesheet" href="/assets/styles.css">
     ${schema}
   </head>

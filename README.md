@@ -22,6 +22,17 @@ After editing content or templates, run `npm run build` and refresh the browser.
 - `assets/styles.css` owns the visual system and responsive styles. Navigation and contact use native links and work without browser JavaScript.
 - `assets/` contains the supplied logo, portraits, property photographs, and local fonts.
 
+Photographs include compressed originals and smaller WebP exports named
+`name-320.webp`, `name-640.webp`, `name-960.webp`, and `name-1280.webp` where those
+widths are smaller than the original. Templates automatically include available
+exports in responsive image sources; a new image still works with its original
+alone. Keep each image's width and height in `data/site-content.mjs` consistent
+with the original. Export variants from the best available source and review
+their quality before replacing them. The website build needs no image-processing
+dependency. When replacing an original, replace or remove its matching variants
+so all widths show the same photograph. The first Portfolio photo loads eagerly;
+homepage cards stay lazy.
+
 Contact is through direct email, telephone, and LinkedIn links. There is no contact form or backend email service.
 
 ## Build and verify
@@ -31,7 +42,7 @@ npm run build
 npm run check
 ```
 
-The build writes the home, about, portfolio, property detail, and contact pages into their public directories, plus `sitemap.xml` and `robots.txt`. The check rebuilds them and verifies local links, referenced assets, in-page anchors, basic metadata, removed placeholders and forms, and JavaScript syntax.
+The build writes the home, about, portfolio, property detail, and contact pages into their public directories, plus `sitemap.xml` and `robots.txt`. The check rebuilds them and verifies local links, referenced assets (including responsive image candidates), in-page anchors, basic metadata, removed placeholders and forms, and JavaScript syntax.
 
 Generated HTML is kept alongside its source to support simple static deployment. Edit the source content or templates instead of generated HTML.
 

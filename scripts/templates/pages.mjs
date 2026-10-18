@@ -1,4 +1,5 @@
 import { escapeHtml } from "./layout.mjs";
+import { responsiveImageSources } from "../utilities/responsive-image-sources.mjs";
 
 // Supporting pages share the same content model so adding a property or partner
 // requires a content change, while presentation and links stay consistent.
@@ -76,7 +77,7 @@ export function renderPortfolio(site) {
           <span class="portfolio-count">${escapeHtml(site.properties.length)} properties</span>
         </div>
         <div class="properties-grid">
-          ${site.properties.map(renderPropertyCard).join("")}
+          ${site.properties.map((property, index) => renderPropertyCard(property, { priority: index === 0 })).join("")}
         </div>
       </div>
     </section>
@@ -129,7 +130,7 @@ export function renderProperty(property, site) {
         </div>
       </div>
       <div class="property-detail-image">
-        <img src="${escapeHtml(property.image)}" alt="${escapeHtml(property.address)}, ${escapeHtml(property.city)} industrial property" width="${escapeHtml(property.imageWidth)}" height="${escapeHtml(property.imageHeight)}" fetchpriority="high">
+        <img src="${escapeHtml(property.image)}" srcset="${escapeHtml(responsiveImageSources(property.image, property.imageWidth))}" sizes="(max-width: 768px) 100vw, (max-width: 1392px) 92.5vw, 1280px" alt="${escapeHtml(property.address)}, ${escapeHtml(property.city)} industrial property" width="${escapeHtml(property.imageWidth)}" height="${escapeHtml(property.imageHeight)}" fetchpriority="high">
       </div>
     </section>
 
@@ -192,7 +193,7 @@ export function renderProperty(property, site) {
         <a class="text-link" href="/portfolio/">Back to portfolio</a>
         ${
           nextProperty
-            ? `<a class="text-link" href="/portfolio/${escapeHtml(nextProperty.slug)}/" aria-label="View property details: ${escapeHtml(nextProperty.address)}, ${escapeHtml(nextProperty.city)}, ${escapeHtml(nextProperty.state)}">Next property: ${escapeHtml(nextProperty.address)}</a>`
+            ? `<a class="text-link" href="/portfolio/${escapeHtml(nextProperty.slug)}/" aria-label="Next property: ${escapeHtml(nextProperty.address)}, ${escapeHtml(nextProperty.city)}, ${escapeHtml(nextProperty.state)}">Next property: ${escapeHtml(nextProperty.address)}</a>`
             : ""
         }
       </nav>
@@ -254,17 +255,16 @@ export function renderPartnerCard(partner) {
           <h3>${escapeHtml(partner.name)}</h3>
           <p class="partner-role">${escapeHtml(partner.role)}</p>
         </div>
-        <a class="partner-social" href="${escapeHtml(partner.linkedin)}" aria-label="View ${escapeHtml(partner.name)}’s LinkedIn profile">View LinkedIn profile</a>
+        <a class="partner-social" href="${escapeHtml(partner.linkedin)}" aria-label="View LinkedIn profile for ${escapeHtml(partner.name)}">View LinkedIn profile</a>
       </div>
-    </article>
-  `;
+    </article>`;
 }
 
-export function renderPropertyCard(property) {
+export function renderPropertyCard(property, { priority = false } = {}) {
   return `
     <article class="property-card">
-      <a class="property-image" href="/portfolio/${escapeHtml(property.slug)}/" aria-label="View property details: ${escapeHtml(property.address)}, ${escapeHtml(property.city)}, ${escapeHtml(property.state)}">
-        <img src="${escapeHtml(property.image)}" alt="${escapeHtml(property.address)}, ${escapeHtml(property.city)}, ${escapeHtml(property.state)} industrial property" width="${escapeHtml(property.imageWidth)}" height="${escapeHtml(property.imageHeight)}" loading="lazy" decoding="async">
+      <a class="property-image" href="/portfolio/${escapeHtml(property.slug)}/" aria-label="${escapeHtml(property.type)} property details: ${escapeHtml(property.address)}, ${escapeHtml(property.city)}, ${escapeHtml(property.state)}">
+        <img src="${escapeHtml(property.image)}" srcset="${escapeHtml(responsiveImageSources(property.image, property.imageWidth))}" sizes="(max-width: 768px) calc(100vw - 40px), (max-width: 1392px) calc(50vw - 48px), 622px" alt="${escapeHtml(property.address)}, ${escapeHtml(property.city)}, ${escapeHtml(property.state)} industrial property" width="${escapeHtml(property.imageWidth)}" height="${escapeHtml(property.imageHeight)}" loading="${priority ? "eager" : "lazy"}"${priority ? ' fetchpriority="high"' : ""} decoding="async">
         <span class="property-type">${escapeHtml(property.type)}</span>
       </a>
       <div class="property-card-body">
@@ -277,8 +277,7 @@ export function renderPropertyCard(property) {
         </dl>
         <a class="property-card-link text-link" href="/portfolio/${escapeHtml(property.slug)}/" aria-label="View property details: ${escapeHtml(property.address)}, ${escapeHtml(property.type)}">View property details</a>
       </div>
-    </article>
-  `;
+    </article>`;
 }
 
 function renderContactRow(label, value, href) {
@@ -294,22 +293,26 @@ function renderContactRow(label, value, href) {
 function renderPartnerProfile(partner) {
   return `
     <article class="partner-profile">
-      ${renderPartnerPhoto(partner)}
+      ${renderPartnerPhoto(partner, { profile: true })}
       <div class="partner-profile-content">
         <div class="partner-info">
           <h3>${escapeHtml(partner.name)}</h3>
           <p class="partner-role">${escapeHtml(partner.role)}</p>
         </div>
         <p class="partner-bio">${escapeHtml(partner.bio)}</p>
-        <a class="partner-social" href="${escapeHtml(partner.linkedin)}" aria-label="View ${escapeHtml(partner.name)}’s LinkedIn profile">View LinkedIn profile</a>
+        <a class="partner-social" href="${escapeHtml(partner.linkedin)}" aria-label="View LinkedIn profile for ${escapeHtml(partner.name)}">View LinkedIn profile</a>
       </div>
     </article>
   `;
 }
 
-function renderPartnerPhoto(partner) {
+function renderPartnerPhoto(partner, { profile = false } = {}) {
+  const sizes = profile
+    ? "(max-width: 480px) calc(100vw - 40px), (max-width: 768px) 448px, (max-width: 1392px) 30vw, 396px"
+    : "(max-width: 480px) calc(100vw - 40px), (max-width: 768px) calc(50vw - 32px), (max-width: 1100px) 372px, 352px";
+
   return `<div class="partner-photo" style="--portrait-scale: ${escapeHtml(partner.portrait?.scale ?? 1)}; --portrait-offset-y: ${escapeHtml(partner.portrait?.offsetY ?? 0)}%;">
-        <img src="${escapeHtml(partner.image)}" alt="${escapeHtml(partner.name)}, ${escapeHtml(partner.role)} at Del Rio Capital" width="720" height="800" loading="lazy" decoding="async">
+        <img src="${escapeHtml(partner.image)}" srcset="${escapeHtml(responsiveImageSources(partner.image, partner.imageWidth))}" sizes="${escapeHtml(sizes)}" alt="${escapeHtml(partner.name)}, ${escapeHtml(partner.role)} at Del Rio Capital" width="${escapeHtml(partner.imageWidth)}" height="${escapeHtml(partner.imageHeight)}" loading="lazy" decoding="async">
       </div>`;
 }
 

@@ -18,6 +18,8 @@ export const siteContent = {
       role: "President",
       bio: "Gaelan Kerr-Koppel is responsible for investment and operational management of Del Rio Capital and its expanding investment portfolio. Gaelan Kerr-Koppel has 12 years of private equity real estate investment and development experience most recently as vice president of acquisitions and development at leading CRE investment firm JMA Ventures, LLC. Gaelan was a key investments team member on successful closings of over $1.6 billion in gross real estate transaction volume across multifamily, mixed-use, commercial and hotel product spanning ground-up development, adaptive re-use, and acquisitions / dispositions. Gaelan graduated with honors from the University of Southern California's Master in Real Estate Development (MRED) program. Gaelan obtained his CPA designation while starting his career in the real estate practice of PricewaterhouseCoopers (PwC).",
       image: "/assets/images/gaelan.webp",
+      imageWidth: 1000,
+      imageHeight: 1000,
       portrait: {
         scale: 1.22,
         offsetY: -8,
@@ -30,6 +32,8 @@ export const siteContent = {
       role: "Principal",
       bio: "Ed Whittemore brings 40 years of leasing and investment experience in industrial real estate through ownership of LAREM, an advisory firm based in Carson, California he co-founded in 1993. Ed is recognized as a leading expert in industrial leasing and property repositioning. Ed focuses on all areas of industrial real estate brokerage, investments and property management. Ed owns and operates 10 high-quality industrial assets in the South Bay Los Angeles, encompassing 380,068 square feet and $100 million in assets under management. Ed provides his hands-on expertise to all investing activities at Del Rio Capital with a particular focus on acquisition evaluation, property renovations, and management of leasing activities.",
       image: "/assets/images/ed.webp",
+      imageWidth: 1000,
+      imageHeight: 918,
       linkedin: "https://www.linkedin.com/in/ed-whittemore-40b5535/",
     },
   ],
