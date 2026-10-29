@@ -4,7 +4,7 @@ export const siteContent = {
   name: "Del Rio Capital",
   description:
     "A premier commercial real estate investment platform focused on value-add and opportunistic industrial acquisitions across the Southwest U.S.",
-  domain: "https://www.delriocapital.com",
+  domain: "https://delriocapital.com",
   email: "gkerrkoppel@delriocapital.com",
   phone: {
     label: "(925) 482-7025",

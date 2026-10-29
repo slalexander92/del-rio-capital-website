@@ -42,7 +42,7 @@ npm run build
 npm run check
 ```
 
-The build writes the home, about, portfolio, property detail, and contact pages into their public directories, plus `sitemap.xml` and `robots.txt`. The check rebuilds them and verifies local links, referenced assets (including responsive image candidates), in-page anchors, basic metadata, removed placeholders and forms, and JavaScript syntax.
+The build writes the home, about, portfolio, property detail, and contact pages into their public directories, plus `sitemap.xml` and `robots.txt`. The check rebuilds them and verifies local links, referenced assets (including responsive image candidates), in-page anchors, page-specific canonical and Open Graph URLs, sitemap coverage, crawl directives, removed placeholders and forms, and JavaScript syntax.
 
 Generated HTML is kept alongside its source to support simple static deployment. Edit the source content or templates instead of generated HTML.
 
@@ -52,11 +52,13 @@ The tracked `.generated-pages.json` manifest records the files owned by the buil
 
 ### Automatic deployment from GitHub
 
-The source repository is [slalexander92/del-rio-capital-website](https://github.com/slalexander92/del-rio-capital-website). The website is hosted by the existing Cloudflare Pages project at [del-rio-capital-preview.pages.dev](https://del-rio-capital-preview.pages.dev/).
+The source repository is [slalexander92/del-rio-capital-website](https://github.com/slalexander92/del-rio-capital-website). The production website is [delriocapital.com](https://delriocapital.com/), hosted by the existing Cloudflare Pages project named `del-rio-capital-preview`. Its [pages.dev address](https://del-rio-capital-preview.pages.dev/) remains available for inspection.
 
 [`.github/workflows/deploy-cloudflare.yml`](.github/workflows/deploy-cloudflare.yml) validates pull requests targeting `main`. Every update to `main`, including a merged pull request, runs those checks and deploys to Cloudflare's production environment. Failed checks stop deployment. Pull requests run checks without Cloudflare credentials. Production deployments are serialized. You can also run the workflow manually from [GitHub Actions](https://github.com/slalexander92/del-rio-capital-website/actions); only runs on `main` can deploy.
 
-The workflow uses Node.js 24 and Wrangler 4.144.0. It deploys the clean `dist/` output produced by `npm run preview:build`, including the public pages, assets, and a 404 page. Source files and the original ZIP are excluded. The current `pages.dev` target remains excluded from search engines through `robots.txt` and `X-Robots-Tag` headers. This site's canonical URLs still refer to `https://www.delriocapital.com`; publishing that domain as an indexable site is a separate hosting change.
+The workflow uses Node.js 24 and Wrangler 4.144.0. It deploys the clean `dist/` output produced by `npm run preview:build`, including the public pages, assets, and a 404 page. The historical `preview:build`, `preview:deploy`, and project names now serve the production website as well. Source files and the original ZIP are excluded.
+
+Canonical URLs, social metadata, and the sitemap use `https://delriocapital.com`. The deployed `robots.txt` allows crawling and points to that domain's sitemap. Host-scoped rules in the generated `_headers` file apply `X-Robots-Tag: noindex, nofollow` only to the project's `pages.dev` address and its deployment or branch subdomains. Crawlers can fetch those pages to see the header; the custom domain remains indexable. The `www` redirect is configured separately in Cloudflare because Pages `_redirects` files do not support domain-level redirects.
 
 #### One-time credentials
 
@@ -77,4 +79,4 @@ With Wrangler signed in to the intended Cloudflare account, run `npm run preview
 
 Upload `index.html`, `about/`, `portfolio/`, `contact/`, `assets/`, `robots.txt`, and `sitemap.xml` to a static hosting provider. The Node development server is not needed in production. Keep source files and the original ZIP archive out of the public deployment.
 
-The production domain is currently assumed to be `https://www.delriocapital.com`. Verify that host before publishing and update `domain` in `data/site-content.mjs` if necessary; a rebuild updates canonical URLs, social metadata, and the sitemap.
+The production domain is `https://delriocapital.com`. Update `domain` in `data/site-content.mjs` if it changes; a rebuild updates canonical URLs, social metadata, and the sitemap. Configure any hostname redirects and preview indexing restrictions with the new hosting provider.

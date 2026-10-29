@@ -23,13 +23,13 @@ await cp(path.join(root, "assets"), path.join(output, "assets"), {
   recursive: true,
 });
 await cp(path.join(root, "sitemap.xml"), path.join(output, "sitemap.xml"));
-await writeFile(
-  path.join(output, "robots.txt"),
-  "User-agent: *\nDisallow: /\n",
-);
+await cp(path.join(root, "robots.txt"), path.join(output, "robots.txt"));
+
+// Allow the custom domain to be indexed while keeping Pages URLs out of search.
 await writeFile(
   path.join(output, "_headers"),
-  "/*\n  X-Robots-Tag: noindex, nofollow\n",
+  "https://:project.pages.dev/*\n  X-Robots-Tag: noindex, nofollow\n\n" +
+    "https://:version.:project.pages.dev/*\n  X-Robots-Tag: noindex, nofollow\n",
 );
 
 // A real 404 prevents the static host from treating unknown paths as app routes.

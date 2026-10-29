@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.delriocapital.com/sitemap.xml
+Sitemap: https://delriocapital.com/sitemap.xml

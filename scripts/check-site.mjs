@@ -13,10 +13,13 @@ for (const page of pages) {
   pageDocuments.set(page.outputPath, await readFile(page.outputPath, "utf8"));
 }
 
-for (const [filePath, html] of pageDocuments) {
-  checkMetadata(filePath, html);
-  await checkReferences(filePath, html);
+for (const page of pages) {
+  const html = pageDocuments.get(page.outputPath);
+  checkMetadata(page, html);
+  await checkReferences(page.outputPath, html);
 }
+
+await checkDiscoveryFiles();
 
 for (const directory of ["scripts", "data", "assets"]) {
   for (const filePath of await findJavaScriptFiles(
@@ -39,22 +42,18 @@ if (errors.length) {
   process.exitCode = 1;
 } else {
   console.log(
-    `Verified ${pages.length} generated pages, local links and assets, page metadata, and JavaScript syntax.`,
+    `Verified ${pages.length} generated pages, local links and assets, page metadata, sitemap and robots directives, and JavaScript syntax.`,
   );
 }
 
-function checkMetadata(filePath, html) {
-  const label = path.relative(root, filePath);
+function checkMetadata(page, html) {
+  const label = path.relative(root, page.outputPath);
   const required = [
     [/<html\b[^>]*\blang=["']en["']/i, "English document language"],
     [/<title>[^<]+<\/title>/i, "page title"],
     [
       /<meta\b[^>]*name=["']description["'][^>]*content=["'][^"']+["']/i,
       "page description",
-    ],
-    [
-      /<link\b[^>]*rel=["']canonical["'][^>]*href=["'][^"']+["']/i,
-      "canonical URL",
     ],
     [/<main\b[^>]*id=["']main["']/i, "main landmark"],
   ];
@@ -63,6 +62,34 @@ function checkMetadata(filePath, html) {
     if (!pattern.test(html)) {
       errors.push(`${label}: missing ${name}.`);
     }
+  }
+
+  // Canonical and share URLs must identify this page on the production domain.
+  const expectedUrl = new URL(page.path, domain).href;
+
+  for (const [pattern, name] of [
+    [
+      /<link\b[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["']/gi,
+      "canonical URL",
+    ],
+    [
+      /<meta\b[^>]*property=["']og:url["'][^>]*content=["']([^"']+)["']/gi,
+      "Open Graph URL",
+    ],
+  ]) {
+    const urls = [...html.matchAll(pattern)].map((match) =>
+      decodeHtmlAttribute(match[1]),
+    );
+
+    if (urls.length !== 1 || urls[0] !== expectedUrl) {
+      errors.push(`${label}: expected one ${name} equal to ${expectedUrl}.`);
+    }
+  }
+
+  if (
+    /<meta\b[^>]*name=["']robots["'][^>]*content=["'][^"']*\bnoindex\b/i.test(html)
+  ) {
+    errors.push(`${label}: production pages must allow indexing.`);
   }
 
   if ((html.match(/<h1\b/gi) || []).length !== 1) {
@@ -79,6 +106,45 @@ function checkMetadata(filePath, html) {
     )
   ) {
     errors.push(`${label}: contains placeholder content.`);
+  }
+}
+
+// Search engines must discover each canonical page and a crawlable sitemap.
+async function checkDiscoveryFiles() {
+  const [sitemap, robots] = await Promise.all([
+    readFile(path.join(root, "sitemap.xml"), "utf8"),
+    readFile(path.join(root, "robots.txt"), "utf8"),
+  ]);
+  const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) =>
+    decodeHtmlAttribute(match[1]),
+  );
+  const expectedLocations = pages.map((page) => new URL(page.path, domain).href);
+
+  if (
+    locations.length !== expectedLocations.length ||
+    new Set(locations).size !== locations.length ||
+    expectedLocations.some((location) => !locations.includes(location))
+  ) {
+    errors.push("sitemap.xml: expected every canonical page exactly once.");
+  }
+
+  if (
+    !/^User-agent:[ \t]*\*[ \t]*$/im.test(robots) ||
+    !/^Allow:[ \t]*\/[ \t]*$/im.test(robots) ||
+    /^Disallow:[ \t]*\/[ \t]*$/im.test(robots)
+  ) {
+    errors.push("robots.txt: production pages must allow crawling.");
+  }
+
+  const sitemapDirectives = [
+    ...robots.matchAll(/^Sitemap:[ \t]*(\S+)[ \t]*$/gim),
+  ];
+
+  if (
+    sitemapDirectives.length !== 1 ||
+    sitemapDirectives[0][1] !== `${domain}/sitemap.xml`
+  ) {
+    errors.push("robots.txt: expected one sitemap URL on the production domain.");
   }
 }
 
