@@ -58,22 +58,30 @@ The source repository is [slalexander92/del-rio-capital-website](https://github.
 
 The workflow uses Node.js 24 and Wrangler 4.144.0. It deploys the clean `dist/` output produced by `npm run preview:build`, including the public pages, assets, and a 404 page. The historical `preview:build`, `preview:deploy`, and project names now serve the production website as well. Source files and the original ZIP are excluded.
 
-Canonical URLs, social metadata, and the sitemap use `https://delriocapital.com`. The deployed `robots.txt` allows crawling and points to that domain's sitemap. Host-scoped rules in the generated `_headers` file apply `X-Robots-Tag: noindex, nofollow` only to the project's `pages.dev` address and its deployment or branch subdomains. Crawlers can fetch those pages to see the header; the custom domain remains indexable. The `www` redirect is configured separately in Cloudflare because Pages `_redirects` files do not support domain-level redirects.
+Canonical URLs, social metadata, and the sitemap use `https://delriocapital.com`. The deployed `robots.txt` allows crawling and points to that domain's sitemap. Host-scoped rules in the generated `_headers` file apply `X-Robots-Tag: noindex, nofollow` only to the project's `pages.dev` address and its deployment or branch subdomains. Crawlers can fetch those pages to see the header; the custom domain remains indexable. The `pages.dev` URLs are public: exclusion from search results does not restrict access.
 
-#### One-time credentials
+Cloudflare has a Single Redirect rule for `www.delriocapital.com` that returns a permanent 301 redirect to `https://delriocapital.com`, preserving the request path and query string. This rule is managed in the domain's **Rules → Redirect Rules** settings, separately from the code; Pages `_redirects` files do not support domain-level redirects.
+
+#### GitHub Actions credentials
 
 Create a custom [Cloudflare API token](https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/#generate-an-api-token) with **Account → Cloudflare Pages → Edit** permission. Limit its account resources to the account containing `del-rio-capital-preview`. Add these [repository Actions secrets](https://github.com/slalexander92/del-rio-capital-website/settings/secrets/actions):
 
-| Secret | Value |
+| Repository secret | Value to configure privately |
 | --- | --- |
-| `CLOUDFLARE_ACCOUNT_ID` | `ad1035dd2914b1ea14c6f98424619acf` |
-| `CLOUDFLARE_API_TOKEN` | The custom Cloudflare token |
+| `CLOUDFLARE_ACCOUNT_ID` | The ID of the Cloudflare account containing the Pages project; see [Find account and zone IDs](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/). |
+| `CLOUDFLARE_API_TOKEN` | The scoped Cloudflare Pages token created above. |
+
+Keep credential values in GitHub Actions secrets or local authentication storage. Commit only their variable names and setup instructions. Cloudflare account IDs and Pages project names identify resources; the API token grants access and must remain private.
 
 The workflow uses GitHub's automatically supplied `GITHUB_TOKEN` to record deployment status. Keep the Cloudflare project's production branch set to `main`. This existing Direct Upload project uses GitHub Actions because Cloudflare [does not allow converting it to native Git integration](https://developers.cloudflare.com/pages/get-started/direct-upload/).
 
 #### Deploy from your computer
 
-With Wrangler signed in to the intended Cloudflare account, run `npm run preview:deploy` to verify, package, and upload the latest site to the same project. Wrangler prints the public deployment URL.
+With Wrangler signed in to the intended Cloudflare account, run `npm run preview:deploy` to verify, package, and upload the latest site to the same project. **Despite its historical name, this command publishes to the live production site.** Wrangler prints the public deployment URL.
+
+#### Files kept out of publication
+
+The Pages deployment uploads only generated pages, public assets, `robots.txt`, `sitemap.xml`, and hosting configuration from `dist/`. Source scripts, this README, local audit notes, environment files, and the original ZIP are not part of that output. Local `.env` and `.dev.vars` files, the project's `.wrangler/` output, audit output, and the ZIP are also excluded from Git by `.gitignore`. Keep private material out of `assets/`, generated page content, and any other files intentionally copied into `dist/`.
 
 ### Other static hosting
 
